@@ -12,3 +12,8 @@ PG_DB = os.getenv("PG_DB")
 PG_PORT = os.getenv("PG_PORT")
 PG_USER = os.getenv("PG_USER")
 PG_PASSWORD = os.getenv("PG_PASSWORD")
+
+START_DATE = os.getenv("START_DATE")
+END_DATE = os.getenv("END_DATE")
+RAW_DIR = os.getenv("RAW_DIR")
+CLEAR_DIR = os.getenv("CLEAR_DIR")
