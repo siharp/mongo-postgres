@@ -15,7 +15,7 @@ def extract_data(uri:str, db_name:str, collection_name:str, result_dir:str, star
         query = {"db_created_at": {"$gte": start_date, "$lt": end_date}}
 
         logging.info(f'Quering data from {collection_name}')
-        data = list(collection.find(query))
+        data = list(collection.find(query).batch_size(5000))
         
         os.makedirs(result_dir, exist_ok=True)
         today = datetime.now().strftime('%Y-%m-%d')
@@ -27,7 +27,6 @@ def extract_data(uri:str, db_name:str, collection_name:str, result_dir:str, star
 
     except Exception as e:
         logging.error('Error Conect to database')
-        return []
 
     finally:
         logging.info(f'Extracted data saved to {result_path}')
