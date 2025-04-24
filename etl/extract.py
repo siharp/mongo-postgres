@@ -1,7 +1,6 @@
 import os
 import json
 import logging
-from datetime import datetime
 from pymongo import MongoClient
 from bson import json_util
 
@@ -18,15 +17,16 @@ def extract_data(uri:str, db_name:str, collection_name:str, result_dir:str, star
         data = list(collection.find(query).batch_size(5000))
         
         os.makedirs(result_dir, exist_ok=True)
-        today = datetime.now().strftime('%Y-%m-%d')
-        result_path = os.path.join(result_dir, f'{collection_name}_{today}.json')
+    
+        result_path = os.path.join(result_dir, f'{collection_name}_{start_date}.json')
 
         with open(result_path, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=4, default=json_util.default)
         return result_path
 
     except Exception as e:
-        logging.error('Error Conect to database')
+        logging.error('Error Connect to database')
+        return None
 
     finally:
         logging.info(f'Extracted data saved to {result_path}')

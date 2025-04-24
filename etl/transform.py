@@ -1,6 +1,5 @@
 import os
 import pandas as pd
-from datetime import datetime
 import logging
 
 def transform_data(json_path:str, collection_name:str, result_dir:str) -> str:
@@ -11,8 +10,7 @@ def transform_data(json_path:str, collection_name:str, result_dir:str) -> str:
     df['app_event_utc_timestamp'] = pd.to_datetime(df['app_event_utc_timestamp'], unit='ms')
 
     os.makedirs(result_dir, exist_ok=True)
-    today = datetime.now().strftime('%Y-%m-%d')
-    result_path = os.path.join(result_dir, f"{collection_name}_{today}.csv")
+    result_path = os.path.join(result_dir, f"{collection_name}.csv")
     df.to_csv(result_path, index=False)
 
     logging.info(f"Transformed data saved to {result_path}")
