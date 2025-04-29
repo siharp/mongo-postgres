@@ -3,10 +3,10 @@ import pandas as pd
 from datetime import datetime
 import logging
 
-def transform_data(json_path:str, collection_name:str, result_dir:str) -> str:
+def transform_data(json_path:str, collection_name:str, result_dir:str, filter_duplicated:str) -> str:
     logging.info('Start transforming data')
     df = pd.read_json(json_path)
-    df = df.drop_duplicates(subset='application_event_watermelon_id')
+    df = df.drop_duplicates(subset=f'{filter_duplicated}')
     df['_id'] = df['_id'].apply(lambda x: x['$oid'] if isinstance(x, dict) and '$oid' in x else x)
     df['app_event_utc_timestamp'] = pd.to_datetime(df['app_event_utc_timestamp'], unit='ms')
 

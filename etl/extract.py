@@ -1,11 +1,16 @@
 import os
 import json
 import logging
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from pymongo import MongoClient, errors
 from bson import json_util
 
 def extract_data(uri:str, db_name:str, collection_name:str, result_dir:str, start_date:int, end_date:int) -> str:
+    
+    #convert date to datemillisecond
+    start_date_mil = int(datetime.strptime(start_date, '%Y-%m-%d').replace(tzinfo=timezone.utc).timestamp() * 1000)
+    end_date_mil = int(datetime.strptime(end_date, '%Y-%m-%d').replace(tzinfo=timezone.utc).timestamp() * 1000)
+
     logging.info('Start extracting data from MongoDB')
     result_path = None
 
@@ -17,7 +22,7 @@ def extract_data(uri:str, db_name:str, collection_name:str, result_dir:str, star
             db = client[db_name]
             collection = db[collection_name]
 
-            query = {"db_created_at": {"$gte": start_date, "$lt": end_date}}
+            query = {"app_event_utc_timestamp": {"$gte": start_date_mil, "$lt": end_date_mil}}
             logging.info(f'Querying data from collection: {collection_name}')
             data = list(collection.find(query).batch_size(5000))
 
